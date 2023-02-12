@@ -2,7 +2,7 @@
 //! control.
 
 use bevy::prelude::*;
-use bevy_debug_camera::{DebugCamera, DebugCameraPlugin};
+use bevy_debug_camera::{DebugCamera, DebugCameraPlugin, KeyboardBindings};
 
 fn main() {
     App::new()
@@ -13,7 +13,15 @@ fn main() {
             },
             ..default()
         }))
-        .add_plugin(DebugCameraPlugin)
+        .add_plugin(DebugCameraPlugin {
+            // As a demonstration, this example shows how you can override key bindings. We keep as
+            // default to keep a consistent experience
+            keyboard_bindings: KeyboardBindings {
+                fwd: KeyCode::W,
+                ..default()
+            },
+            ..default()
+        })
         .add_startup_system(setup)
         .run();
 }

@@ -5,7 +5,7 @@ pub struct ActiveGamepad(pub Option<Gamepad>);
 
 /// This system signals whether the debug camera should be active. You can selectively pick which
 /// input types are active at a given time. You can
-#[derive(Resource, Debug)]
+#[derive(Resource, Debug, Clone)]
 pub struct DebugCameraActive {
     /// If set to true, our keyboard + mouse bindings will be active for any cameras marked as
     /// [`crate::DebugCamera`].
@@ -20,6 +20,64 @@ impl Default for DebugCameraActive {
         DebugCameraActive {
             keymouse: true,
             gamepad: true,
+        }
+    }
+}
+
+/// Configurable bindings for keyboard input. Field defaults can be found in the crate root
+/// documentation.
+#[derive(Resource, Debug, Clone)]
+pub struct KeyboardBindings {
+    pub fwd: KeyCode,
+    pub bwd: KeyCode,
+    pub up: KeyCode,
+    pub down: KeyCode,
+    pub left: KeyCode,
+    pub right: KeyCode,
+    pub roll_left: KeyCode,
+    pub roll_right: KeyCode,
+}
+
+impl Default for KeyboardBindings {
+    fn default() -> KeyboardBindings {
+        KeyboardBindings {
+            fwd: KeyCode::W,
+            bwd: KeyCode::S,
+            up: KeyCode::Space,
+            down: KeyCode::LShift,
+            left: KeyCode::A,
+            right: KeyCode::D,
+            roll_left: KeyCode::Q,
+            roll_right: KeyCode::E,
+        }
+    }
+}
+
+/// Configurable bindings for gamepad input. Field defaults can be found in the crate root
+/// documentation.
+#[derive(Resource, Debug, Clone)]
+pub struct GamepadBindings {
+    pub fwd_bwd: GamepadAxisType,
+    pub up: GamepadButtonType,
+    pub down: GamepadButtonType,
+    pub left_right: GamepadAxisType,
+    pub roll_left: GamepadButtonType,
+    pub roll_right: GamepadButtonType,
+    pub yaw: GamepadAxisType,
+    pub pitch: GamepadAxisType,
+}
+
+impl Default for GamepadBindings {
+    fn default() -> GamepadBindings {
+        GamepadBindings {
+            fwd_bwd: GamepadAxisType::LeftStickY,
+            up: GamepadButtonType::RightTrigger2,
+            down: GamepadButtonType::LeftTrigger2,
+            left_right: GamepadAxisType::LeftStickX,
+            roll_left: GamepadButtonType::LeftTrigger,
+            roll_right: GamepadButtonType::RightTrigger,
+            yaw: GamepadAxisType::RightStickX,
+            pitch: GamepadAxisType::RightStickY,
         }
     }
 }

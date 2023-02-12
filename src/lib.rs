@@ -15,7 +15,7 @@
 //! fn main() {
 //!     App::new()
 //!         .add_plugins(DefaultPlugins)
-//!         .add_plugin(DebugCameraPlugin)
+//!         .add_plugin(DebugCameraPlugin::default())
 //!         .add_startup_system(setup)
 //!         .run();
 //! }
@@ -72,30 +72,26 @@ mod resources;
 mod systems;
 
 pub use components::DebugCamera;
-pub use resources::{ActiveGamepad, DebugCameraActive};
+pub use resources::{ActiveGamepad, DebugCameraActive, GamepadBindings, KeyboardBindings};
 
 use bevy::prelude::*;
 
-pub struct DebugCameraPlugin;
+#[derive(Debug, Default)]
+pub struct DebugCameraPlugin {
+    pub gamepad_bindings: resources::GamepadBindings,
+    pub keyboard_bindings: resources::KeyboardBindings,
+    pub debug_camera_active: resources::DebugCameraActive,
+}
 
 impl Plugin for DebugCameraPlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(resources::ActiveGamepad::default())
-            .insert_resource(resources::DebugCameraActive::default())
+            .insert_resource(self.debug_camera_active.clone())
+            .insert_resource(self.gamepad_bindings.clone())
+            .insert_resource(self.keyboard_bindings.clone())
             .add_system(systems::camera_movement_system)
             .add_system(systems::camera_update_system)
             .add_system(systems::cursor_grab_system)
             .add_system(systems::gamepad_connections);
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let camera = DebugCamera::default();
-        assert_eq!(camera.speed_translate, 100.);
     }
 }

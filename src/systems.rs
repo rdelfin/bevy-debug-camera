@@ -1,6 +1,6 @@
 use crate::{
     components::DebugCamera,
-    resources::{ActiveGamepad, DebugCameraActive},
+    resources::{ActiveGamepad, DebugCameraActive, GamepadBindings, KeyboardBindings},
 };
 use bevy::{
     input::{
@@ -20,6 +20,8 @@ pub fn camera_movement_system(
     time: Res<Time>,
     keys: Res<Input<KeyCode>>,
     debug_camera_active: Res<DebugCameraActive>,
+    keyboard_bindings: Res<KeyboardBindings>,
+    gamepad_bindings: Res<GamepadBindings>,
     mut motion_evr: EventReader<MouseMotion>,
     axes: Res<Axis<GamepadAxis>>,
     buttons: Res<Input<GamepadButton>>,
@@ -41,33 +43,24 @@ pub fn camera_movement_system(
     if debug_camera_active.gamepad {
         if let Some(gamepad) = active_gamepad.0 {
             // Apply translation
-            if let (Some(x), Some(y), Some(lt), Some(rt)) = (
-                axes.get(GamepadAxis::new(gamepad, GamepadAxisType::LeftStickX)),
-                axes.get(GamepadAxis::new(gamepad, GamepadAxisType::LeftStickY)),
-                button_axes.get(GamepadButton::new(gamepad, GamepadButtonType::LeftTrigger2)),
-                button_axes.get(GamepadButton::new(
-                    gamepad,
-                    GamepadButtonType::RightTrigger2,
-                )),
+            if let (Some(x), Some(y), Some(down), Some(up)) = (
+                axes.get(GamepadAxis::new(gamepad, gamepad_bindings.left_right)),
+                axes.get(GamepadAxis::new(gamepad, gamepad_bindings.fwd_bwd)),
+                button_axes.get(GamepadButton::new(gamepad, gamepad_bindings.down)),
+                button_axes.get(GamepadButton::new(gamepad, gamepad_bindings.up)),
             ) {
-                let up_down = rt - lt;
+                let up_down = up - down;
                 local_translate_vec += time.delta_seconds() * Vec3::new(y, up_down, x);
             }
 
             // Apply rotation
-            if let (Some(x), Some(y), lt, rt) = (
-                axes.get(GamepadAxis::new(gamepad, GamepadAxisType::RightStickX)),
-                axes.get(GamepadAxis::new(gamepad, GamepadAxisType::RightStickY)),
-                buttons.pressed(GamepadButton::new(gamepad, GamepadButtonType::LeftTrigger)),
-                buttons.pressed(GamepadButton::new(gamepad, GamepadButtonType::RightTrigger)),
+            if let (Some(x), Some(y), roll_left, roll_right) = (
+                axes.get(GamepadAxis::new(gamepad, gamepad_bindings.yaw)),
+                axes.get(GamepadAxis::new(gamepad, gamepad_bindings.pitch)),
+                buttons.pressed(GamepadButton::new(gamepad, gamepad_bindings.roll_left)),
+                buttons.pressed(GamepadButton::new(gamepad, gamepad_bindings.roll_right)),
             ) {
-                let roll = if lt == rt {
-                    0.
-                } else if lt {
-                    -1.
-                } else {
-                    1.
-                };
+                let roll = buttons_to_dir(roll_right, roll_left);
                 rotate_vec += time.delta_seconds() * Vec3::new(-x, y, roll);
             }
         }
@@ -75,14 +68,14 @@ pub fn camera_movement_system(
 
     // Next, apply keyboard and mouse controls
     if debug_camera_active.keymouse {
-        let key_fwd = keys.pressed(KeyCode::W);
-        let key_bwd = keys.pressed(KeyCode::S);
-        let key_up = keys.pressed(KeyCode::Space);
-        let key_down = keys.pressed(KeyCode::LShift) || keys.pressed(KeyCode::RShift);
-        let key_left = keys.pressed(KeyCode::A);
-        let key_right = keys.pressed(KeyCode::D);
-        let key_roll_left = keys.pressed(KeyCode::Q);
-        let key_roll_right = keys.pressed(KeyCode::E);
+        let key_fwd = keys.pressed(keyboard_bindings.fwd);
+        let key_bwd = keys.pressed(keyboard_bindings.bwd);
+        let key_up = keys.pressed(keyboard_bindings.up);
+        let key_down = keys.pressed(keyboard_bindings.down);
+        let key_left = keys.pressed(keyboard_bindings.left);
+        let key_right = keys.pressed(keyboard_bindings.right);
+        let key_roll_left = keys.pressed(keyboard_bindings.roll_left);
+        let key_roll_right = keys.pressed(keyboard_bindings.roll_right);
         let mouse_delta = {
             let mut d = Vec2::default();
             for ev in motion_evr.iter() {
