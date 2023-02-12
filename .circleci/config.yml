@@ -1,0 +1,9 @@
+jobs:
+  build:
+    docker:
+      - image: cimg/rust:1.67.0
+    steps:
+      - checkout
+      - run: cargo build
+      - run: cargo test
+      - run: node clippy -- -D clippy::cargo -D clippy::all -D warnings

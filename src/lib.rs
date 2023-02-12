@@ -14,27 +14,25 @@
 //! practical uses of this crate, but to get started you can simply do the following when setting
 //! up your app:
 //!
-//! ```
+//! ```no_run
 //! use bevy::prelude::*;
 //! use bevy_debug_camera::{DebugCamera, DebugCameraPlugin};
 //!
-//! App::new()
-//!     .add_plugins(DefaultPlugins)
-//!     .add_plugin(DebugCameraPlugin::default())
-//!     .add_startup_system(setup)
-//!     .run();
-//! ```
+//! fn main() {
+//!     App::new()
+//!         .add_plugins(DefaultPlugins)
+//!         .add_plugin(DebugCameraPlugin::default())
+//!         .add_startup_system(setup)
+//!         .run();
+//! }
 //!
-//! And, when setting up your camera you can do the following:
-//!
-//! ```
 //! fn setup(mut commands: Commands) {
 //!     // ... other setup code
 //!     commands
 //!         .spawn(Camera3dBundle::default())
 //!         .insert(DebugCamera {
 //!             position: Vec3::new(-5., 1., 0.),
-//!             ..default(),
+//!             ..default()
 //!         });
 //! }
 //! ```
@@ -84,39 +82,45 @@
 //! during runtime as well An example using all configuration options can be seen below and in the
 //! `configuration` example:
 //!
-//! ```
+//! ```no_run
 //! use bevy::prelude::*;
 //! use bevy_debug_camera::{
 //!     DebugCamera, DebugCameraPlugin, GamepadBindings, KeyboardBindings, DebugCameraActive,
 //! };
 //!
-//! App::new()
-//!     .add_plugins(DefaultPlugins)
-//!     // Each field in `DebugCameraPlugin` can be set directly or picked up from
-//!     // default.
-//!     .add_plugin(DebugCameraPlugin {
-//!         gamepad_bindings: GamepadBindings {
-//!             // Overrides only the roll buttons
-//!             roll_left: GamepadButtonType::West,
-//!             roll_right: GamepadButtonType::East,
-//!             ..default()
-//!         },
-//!         keyboard_bindings: KeyboardBindings {
-//!             // Override WASD with arrows
-//!             fwd: KeyCode::Up,
-//!             bwd: KeyCode::Down,
-//!             left: KeyCode::Left,
-//!             right: KeyCode::Right,
-//!             ..default()
-//!         },
-//!         debug_camera_active: DebugCameraActive {
-//!             // Disable keyboard + mouse only
-//!             keymouse: false,
-//!             ..default()
-//!         },
-//!     })
-//!     .add_startup_system(setup)
-//!     .run();
+//! fn main() {
+//!     App::new()
+//!         .add_plugins(DefaultPlugins)
+//!         // Each field in `DebugCameraPlugin` can be set directly or picked up from
+//!         // default.
+//!         .add_plugin(DebugCameraPlugin {
+//!             gamepad_bindings: GamepadBindings {
+//!                 // Overrides only the roll buttons
+//!                 roll_left: GamepadButtonType::West,
+//!                 roll_right: GamepadButtonType::East,
+//!                 ..default()
+//!             },
+//!             keyboard_bindings: KeyboardBindings {
+//!                 // Override WASD with arrows
+//!                 fwd: KeyCode::Up,
+//!                 bwd: KeyCode::Down,
+//!                 left: KeyCode::Left,
+//!                 right: KeyCode::Right,
+//!                 ..default()
+//!             },
+//!             debug_camera_active: DebugCameraActive {
+//!                 // Disable keyboard + mouse only
+//!                 keymouse: false,
+//!                 ..default()
+//!             },
+//!         })
+//!         .add_startup_system(setup)
+//!         .run();
+//! }
+//!
+//! fn setup() {
+//!     // Setup logic here...
+//! }
 //! ```
 
 mod components;

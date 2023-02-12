@@ -23,22 +23,18 @@ use bevy_debug_camera::{DebugCamera, DebugCameraPlugin};
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugin(DebugCameraPlugin)
+        .add_plugin(DebugCameraPlugin::default())
         .add_startup_system(setup)
         .run();
 }
-```
 
-And, when setting up your camera you can do the following:
-
-```rust
 fn setup(mut commands: Commands) {
     // ... other setup code
     commands
         .spawn(Camera3dBundle::default())
         .insert(DebugCamera {
             position: Vec3::new(-5., 1., 0.),
-            ..default(),
+            ..default()
         });
 }
 ```
@@ -122,5 +118,9 @@ fn main() {
         })
         .add_startup_system(setup)
         .run();
+}
+
+fn setup() {
+    // Setup logic here...
 }
 ```
