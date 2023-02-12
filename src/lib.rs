@@ -34,6 +34,7 @@
 //!         });
 //! }
 //! ```
+//!
 //! # Bindings
 //!
 //! The default bindings are as follows:
