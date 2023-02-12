@@ -27,7 +27,7 @@ impl Default for DebugCamera {
             up: Vec3::new(0., 1., 0.),
             fwd: Vec3::new(1., 0., 0.),
             position: Vec3::default(),
-            speed_translate: 100.,
+            speed_translate: 10.,
             speed_rotate: std::f32::consts::FRAC_PI_4,
         }
     }
