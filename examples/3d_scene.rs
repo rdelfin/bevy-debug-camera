@@ -6,7 +6,13 @@ use bevy_debug_camera::{DebugCamera, DebugCameraPlugin};
 
 fn main() {
     App::new()
-        .add_plugins(DefaultPlugins)
+        .add_plugins(DefaultPlugins.set(WindowPlugin {
+            window: WindowDescriptor {
+                title: "3D Scene".into(),
+                ..default()
+            },
+            ..default()
+        }))
         .add_plugin(DebugCameraPlugin)
         .add_startup_system(setup)
         .run();
