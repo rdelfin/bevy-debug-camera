@@ -3,6 +3,10 @@ name = "bevy-debug-camera"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
+repository = "https://github.com/rdelfin/bevy-debug-camera"
+keywords = ["gamedev", "bevy", "flycam", "camera", "3d"]
+categories = ["game-development"]
+description = "A simple camera plugin perfect for debugging in 3D bevy games"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 

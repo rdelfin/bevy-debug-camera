@@ -15,6 +15,7 @@ use bevy::{
 /// This is the main system responsible for updating camera movement. It takes mouse, keyboard, and
 /// gamepad input and updates the [`DebugCamera`] component acording to those changes. This
 /// explicitly does *not* update the camera's tranform.
+#[allow(clippy::too_many_arguments)]
 pub fn camera_movement_system(
     mut q: Query<&mut DebugCamera>,
     time: Res<Time>,
@@ -204,8 +205,6 @@ pub fn gamepad_connections(
                 }
             }
             GamepadEventType::Disconnected => {
-                println!("Lost gamepad connection with ID: {:?}", id);
-
                 // if it's the one we previously associated with the player,
                 // disassociate it:
                 let mut remove_gamepad = false;

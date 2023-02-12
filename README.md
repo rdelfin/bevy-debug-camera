@@ -4,6 +4,12 @@ This library provides a simple, lightweight way of having a "flycam" style camer
 debugging. It's confirgurable, letting you easily enable the system locally for a camera or
 globally for all cameras with a component and resource.
 
+# Bevy compatibility
+
+| Bevy Version | bevy-debug-camera version |
+|--------------|---------------------------|
+| 0.9.1        | ^0.1.0                    |
+
 # Examples
 
 You can look at the examples folder for
