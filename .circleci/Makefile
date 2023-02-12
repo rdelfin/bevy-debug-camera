@@ -4,8 +4,8 @@ IMAGE_NAME=$(IMAGE_BASE_NAME):$(TAG)
 
 .PHONY: build
 build:
-	docker build rdelfin/rust_ci:1.67.0
+	docker build -t $(IMAGE_NAME) .
 
 .PHONY: publish
 publish: build
-	docker push rdelfin/rust_ci:1.67.0
+	docker push $(IMAGE_NAME)
