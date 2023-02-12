@@ -66,6 +66,56 @@
 //! | pitch           | Lstick Y   |
 //! | Roll left       | `LBumper`  |
 //! | Roll right      | `RBumper`  |
+//!
+//! # Configuring Plugin
+//!
+//! The plugin comes with some configuration options you can set on startup that use to customise
+//! behaviour of the cameras in use. You can configure:
+//!
+//! * Keyboard bindings
+//! * Gamepad bindings
+//! * Accepted input
+//!
+//! All these customisation are exposed as resources, which are constantly read and can be modified
+//! during runtime as well An example using all configuration options can be seen below and in the
+//! `configuration` example:
+//!
+//! ```
+//! use bevy::prelude::*;
+//! use bevy_debug_camera::{
+//!     DebugCamera, DebugCameraPlugin, GamepadBindings, KeyboardBindings, DebugCameraActive,
+//! };
+//!
+//! fn main() {
+//!     App::new()
+//!         .add_plugins(DefaultPlugins)
+//!         // Each field in `DebugCameraPlugin` can be set directly or picked up from
+//!         // default.
+//!         .add_plugin(DebugCameraPlugin {
+//!             gamepad_bindings: GamepadBindings {
+//!                 // Overrides only the roll buttons
+//!                 roll_left: GamepadButtonType::West,
+//!                 roll_right: GamepadButtonType::East,
+//!                 ..default()
+//!             },
+//!             keyboard_bindings: KeyboardBindings {
+//!                 // Override WASD with arrows
+//!                 fwd: KeyCode::Up,
+//!                 bwd: KeyCode::Down,
+//!                 left: KeyCode::Left,
+//!                 right: KeyCode::Right,
+//!                 ..default()
+//!             },
+//!             debug_camera_active: DebugCameraActive {
+//!                 // Disable keyboard + mouse only
+//!                 keymouse: false,
+//!                 ..default()
+//!             },
+//!         })
+//!         .add_startup_system(setup)
+//!         .run();
+//! }
+//! ```
 
 mod components;
 mod resources;

@@ -163,12 +163,12 @@ pub fn camera_update_system(
 }
 
 /// This system ensures we're always locking the cursor in on the screen when running. We
-/// stop running this logic if both control methods are off, letting you change the cursor mode.
+/// stop running this logic if keymouse input is off, letting you change the cursor mode.
 pub fn cursor_grab_system(
     mut windows: ResMut<Windows>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
-    if debug_camera_active.gamepad || debug_camera_active.keymouse {
+    if debug_camera_active.keymouse {
         let window = windows.get_primary_mut().unwrap();
         window.set_cursor_grab_mode(CursorGrabMode::Locked);
         window.set_cursor_visibility(false);
