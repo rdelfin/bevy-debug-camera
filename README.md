@@ -1,5 +1,9 @@
 # Bevy Debug Camera
 
+[![MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/rdelfin/bevy-debug-camera/blob/main/LICENSE)
+[![CircleCI](https://circleci.com/gh/rdelfin/bevy-debug-camera.svg?style=shield)](https://circleci.com/gh/rdelfin/bevy-debug-camera)
+
+
 This library provides a simple, lightweight way of having a "flycam" style camera for
 debugging. It's confirgurable, letting you easily enable the system locally for a camera or
 globally for all cameras with a component and resource.
