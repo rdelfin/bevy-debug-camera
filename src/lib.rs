@@ -1,6 +1,6 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+mod components;
+
+pub use components::DebugCamera;
 
 #[cfg(test)]
 mod tests {
@@ -8,7 +8,7 @@ mod tests {
 
     #[test]
     fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+        let camera = DebugCamera::default();
+        assert_eq!(camera.speed_translate, 100.);
     }
 }
