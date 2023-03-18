@@ -4,7 +4,7 @@ use crate::{
 };
 use bevy::{
     input::{
-        gamepad::{GamepadButton, GamepadSettings},
+        gamepad::{GamepadButton, GamepadConnection, GamepadEvent, GamepadSettings},
         mouse::MouseMotion,
     },
     prelude::*,
@@ -166,13 +166,14 @@ pub fn camera_update_system(
 /// This system ensures we're always locking the cursor in on the screen when running. We
 /// stop running this logic if keymouse input is off, letting you change the cursor mode.
 pub fn cursor_grab_system(
-    mut windows: ResMut<Windows>,
+    mut windows: Query<&mut Window>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
     if debug_camera_active.keymouse {
-        let window = windows.get_primary_mut().unwrap();
-        window.set_cursor_grab_mode(CursorGrabMode::Locked);
-        window.set_cursor_visibility(false);
+        if let Some(mut window) = windows.iter_mut().next() {
+            window.cursor.grab_mode = CursorGrabMode::Locked;
+            window.cursor.visible = false;
+        }
     }
 }
 
@@ -184,46 +185,45 @@ pub fn gamepad_connections(
     mut settings: ResMut<GamepadSettings>,
 ) {
     for ev in gamepad_evr.iter() {
-        // the ID of the gamepad
-        let id = ev.gamepad;
         // Only matching again
-        match &ev.event_type {
-            GamepadEventType::Connected(info) => {
-                // if we don't have any gamepad yet, use this one
-                if active_gamepad.0.is_none() {
-                    event!(
-                        Level::INFO,
-                        event = "active_gamepad_set",
-                        gamepad_name = info.name,
-                        gamepad_id = id.id,
-                    );
-                    active_gamepad.0 = Some(id);
-
-                    // Configure controller for better use
-                    settings.default_axis_settings.set_deadzone_lowerbound(-0.1);
-                    settings.default_axis_settings.set_deadzone_upperbound(0.1);
-                }
-            }
-            GamepadEventType::Disconnected => {
-                // if it's the one we previously associated with the player,
-                // disassociate it:
-                let mut remove_gamepad = false;
-                if let Some(old_id) = active_gamepad.0 {
-                    if old_id == id {
+        if let GamepadEvent::Connection(conn_event) = ev {
+            let id = conn_event.gamepad;
+            match &conn_event.connection {
+                GamepadConnection::Connected(info) => {
+                    // if we don't have any gamepad yet, use this one
+                    if active_gamepad.0.is_none() {
                         event!(
                             Level::INFO,
-                            event = "active_gamepad_removed",
+                            event = "active_gamepad_set",
+                            gamepad_name = info.name,
                             gamepad_id = id.id,
                         );
-                        remove_gamepad = true;
+                        active_gamepad.0 = Some(id);
+
+                        // Configure controller for better use
+                        settings.default_axis_settings.set_deadzone_lowerbound(-0.1);
+                        settings.default_axis_settings.set_deadzone_upperbound(0.1);
                     }
                 }
-                if remove_gamepad {
-                    active_gamepad.0 = None;
+                GamepadConnection::Disconnected => {
+                    // if it's the one we previously associated with the player,
+                    // disassociate it:
+                    let mut remove_gamepad = false;
+                    if let Some(old_id) = active_gamepad.0 {
+                        if old_id == id {
+                            event!(
+                                Level::INFO,
+                                event = "active_gamepad_removed",
+                                gamepad_id = id.id,
+                            );
+                            remove_gamepad = true;
+                        }
+                    }
+                    if remove_gamepad {
+                        active_gamepad.0 = None;
+                    }
                 }
             }
-            // other events are irrelevant
-            _ => {}
         }
     }
 }
