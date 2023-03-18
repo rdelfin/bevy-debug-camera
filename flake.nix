@@ -25,9 +25,14 @@
           ];
 
           buildInputs = [
-            (rust-bin.stable.latest.default.override {
+            (rust-bin.nightly.latest.default.override {
               extensions = [ "rust-src" ];
             })
+            systemd alsa-lib vulkan-loader
+            # for `x11` feature in bevy
+            xorg.libXcursor xorg.libXrandr xorg.libXi
+            # for `wayland` feature in bevy
+            # libxkbcommon wayland
           ];
 
           LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
