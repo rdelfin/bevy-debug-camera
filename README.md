@@ -15,6 +15,7 @@ globally for all cameras with a component and resource.
 | Bevy Version | bevy-debug-camera version |
 |--------------|---------------------------|
 | 0.9.1        | ^0.1.0                    |
+| ^0.10.0      | ^0.2.0                    |
 
 # Examples
 
