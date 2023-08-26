@@ -7,10 +7,10 @@ use bevy_debug_camera::{DebugCamera, DebugCameraPlugin, KeyboardBindings};
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
-            window: WindowDescriptor {
+            primary_window: Some(Window {
                 title: "3D Scene".into(),
                 ..default()
-            },
+            }),
             ..default()
         }))
         .add_plugin(DebugCameraPlugin {
@@ -34,7 +34,10 @@ fn setup(
 ) {
     // plane
     commands.spawn(PbrBundle {
-        mesh: meshes.add(Mesh::from(shape::Plane { size: 5.0 })),
+        mesh: meshes.add(Mesh::from(shape::Plane {
+            size: 5.0,
+            ..default()
+        })),
         material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
         ..default()
     });
