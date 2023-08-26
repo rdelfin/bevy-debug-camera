@@ -44,7 +44,7 @@ impl Default for KeyboardBindings {
             fwd: KeyCode::W,
             bwd: KeyCode::S,
             up: KeyCode::Space,
-            down: KeyCode::LShift,
+            down: KeyCode::ShiftLeft,
             left: KeyCode::A,
             right: KeyCode::D,
             roll_left: KeyCode::Q,

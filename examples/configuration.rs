@@ -11,7 +11,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         // Each field in `DebugCameraPlugin` can be set directly or picked up from
         // default.
-        .add_plugin(DebugCameraPlugin {
+        .add_plugins(DebugCameraPlugin {
             gamepad_bindings: GamepadBindings {
                 // Overrides only the roll buttons
                 roll_left: GamepadButtonType::West,
@@ -32,7 +32,7 @@ fn main() {
                 ..default()
             },
         })
-        .add_startup_system(setup)
+        .add_systems(Startup, setup)
         .run();
 }
 

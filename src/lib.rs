@@ -7,6 +7,7 @@
 //! | Bevy Version | bevy-debug-camera version |
 //! |--------------|---------------------------|
 //! | 0.9.1        | ^0.1.0                    |
+//! | ^0.10.0      | ^0.2.0                    |
 //!
 //! # Examples
 //!
@@ -145,9 +146,9 @@ impl Plugin for DebugCameraPlugin {
             .insert_resource(self.debug_camera_active.clone())
             .insert_resource(self.gamepad_bindings.clone())
             .insert_resource(self.keyboard_bindings.clone())
-            .add_system(systems::camera_movement_system)
-            .add_system(systems::camera_update_system)
-            .add_system(systems::cursor_grab_system)
-            .add_system(systems::gamepad_connections);
+            .add_systems(Update, systems::camera_movement_system)
+            .add_systems(Update, systems::camera_update_system)
+            .add_systems(Update, systems::cursor_grab_system)
+            .add_systems(Update, systems::gamepad_connections);
     }
 }

@@ -13,7 +13,7 @@ fn main() {
             }),
             ..default()
         }))
-        .add_plugin(DebugCameraPlugin {
+        .add_plugins(DebugCameraPlugin {
             // As a demonstration, this example shows how you can override key bindings. We keep as
             // default to keep a consistent experience
             keyboard_bindings: KeyboardBindings {
@@ -22,7 +22,7 @@ fn main() {
             },
             ..default()
         })
-        .add_startup_system(setup)
+        .add_systems(Startup, setup)
         .run();
 }
 
