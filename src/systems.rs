@@ -173,6 +173,10 @@ pub fn camera_update_system(
     mut q: Query<(&mut Transform, &DebugCamera), With<Camera>>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
+    if debug_camera_active.esc_toggled {
+        return;
+    }
+
     if debug_camera_active.gamepad || debug_camera_active.keymouse {
         for (mut transform, controlled_camera) in q.iter_mut() {
             *transform = Transform::from_translation(controlled_camera.position).looking_at(
@@ -189,6 +193,10 @@ pub fn cursor_grab_system(
     mut windows: Query<&mut Window>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
+    if debug_camera_active.esc_toggled {
+        return;
+    }
+
     if debug_camera_active.keymouse {
         if let Some(mut window) = windows.iter_mut().next() {
             window.cursor.grab_mode = CursorGrabMode::Locked;
