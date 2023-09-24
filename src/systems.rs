@@ -196,7 +196,7 @@ pub fn cursor_grab_system(
 
     if debug_camera_active.keymouse {
         if let Some(mut window) = windows.iter_mut().next() {
-            if debug_camera_active.esc_toggled {
+            if !debug_camera_active.esc_toggled {
                 window.cursor.grab_mode = CursorGrabMode::Locked;
                 window.cursor.visible = false;
             } else {
