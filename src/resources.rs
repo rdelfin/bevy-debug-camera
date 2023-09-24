@@ -13,6 +13,8 @@ pub struct DebugCameraActive {
     /// If set to true, our gamepad bindings will be active for any cameras marked as
     /// [`crate::DebugCamera`].
     pub gamepad: bool,
+    // if true, then debug camera is frozen in place until next esc key is pressed
+    pub(crate) esc_toggled: bool,
 }
 
 impl Default for DebugCameraActive {
@@ -20,6 +22,7 @@ impl Default for DebugCameraActive {
         DebugCameraActive {
             keymouse: true,
             gamepad: true,
+            esc_toggled: false,
         }
     }
 }
@@ -28,6 +31,7 @@ impl Default for DebugCameraActive {
 /// documentation.
 #[derive(Resource, Debug, Clone)]
 pub struct KeyboardBindings {
+    pub esc: KeyCode,
     pub fwd: KeyCode,
     pub bwd: KeyCode,
     pub up: KeyCode,
@@ -41,6 +45,7 @@ pub struct KeyboardBindings {
 impl Default for KeyboardBindings {
     fn default() -> KeyboardBindings {
         KeyboardBindings {
+            esc: KeyCode::Escape,
             fwd: KeyCode::W,
             bwd: KeyCode::S,
             up: KeyCode::Space,
@@ -57,6 +62,7 @@ impl Default for KeyboardBindings {
 /// documentation.
 #[derive(Resource, Debug, Clone)]
 pub struct GamepadBindings {
+    pub esc: GamepadButtonType,
     pub fwd_bwd: GamepadAxisType,
     pub up: GamepadButtonType,
     pub down: GamepadButtonType,
@@ -70,6 +76,7 @@ pub struct GamepadBindings {
 impl Default for GamepadBindings {
     fn default() -> GamepadBindings {
         GamepadBindings {
+            esc: GamepadButtonType::Mode,
             fwd_bwd: GamepadAxisType::LeftStickY,
             up: GamepadButtonType::RightTrigger2,
             down: GamepadButtonType::LeftTrigger2,

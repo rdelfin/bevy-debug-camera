@@ -20,7 +20,7 @@ pub fn camera_movement_system(
     mut q: Query<&mut DebugCamera>,
     time: Res<Time>,
     keys: Res<Input<KeyCode>>,
-    debug_camera_active: Res<DebugCameraActive>,
+    mut debug_camera_active: ResMut<DebugCameraActive>,
     keyboard_bindings: Res<KeyboardBindings>,
     gamepad_bindings: Res<GamepadBindings>,
     mut motion_evr: EventReader<MouseMotion>,
@@ -32,6 +32,26 @@ pub fn camera_movement_system(
     // Shortcut if neither control scheme is active. This is not strictly needed, but it avoids
     // some computation if controls are inactive.
     if !(debug_camera_active.gamepad || debug_camera_active.keymouse) {
+        return;
+    }
+
+    if debug_camera_active.gamepad {
+        if let Some(gamepad) = active_gamepad.0 {
+            if button_axes.get(GamepadButton::new(gamepad, gamepad_bindings.esc)).is_some() {
+                debug_camera_active.esc_toggled = !debug_camera_active.esc_toggled;
+                return;
+            }
+        }
+    }
+
+    if debug_camera_active.keymouse {
+        if keys.pressed(keyboard_bindings.esc) {
+            debug_camera_active.esc_toggled = !debug_camera_active.esc_toggled;
+            return;
+        }
+    }
+
+    if debug_camera_active.esc_toggled {
         return;
     }
 
