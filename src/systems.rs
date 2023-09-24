@@ -193,14 +193,16 @@ pub fn cursor_grab_system(
     mut windows: Query<&mut Window>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
-    if debug_camera_active.esc_toggled {
-        return;
-    }
 
     if debug_camera_active.keymouse {
         if let Some(mut window) = windows.iter_mut().next() {
-            window.cursor.grab_mode = CursorGrabMode::Locked;
-            window.cursor.visible = false;
+            if debug_camera_active.esc_toggled {
+                window.cursor.grab_mode = CursorGrabMode::Locked;
+                window.cursor.visible = false;
+            } else {
+                window.cursor.grab_mode = CursorGrabMode::None;
+                window.cursor.visible = true;
+            }
         }
     }
 }
