@@ -45,7 +45,7 @@ pub fn camera_movement_system(
     }
 
     if debug_camera_active.keymouse {
-        if keys.pressed(keyboard_bindings.esc) {
+        if keys.just_released(keyboard_bindings.esc) {
             debug_camera_active.esc_toggled = !debug_camera_active.esc_toggled;
             return;
         }
