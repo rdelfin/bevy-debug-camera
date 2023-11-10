@@ -99,7 +99,7 @@ pub fn camera_movement_system(
         let key_roll_right = keys.pressed(keyboard_bindings.roll_right);
         let mouse_delta = {
             let mut d = Vec2::default();
-            for ev in motion_evr.iter() {
+            for ev in motion_evr.read() {
                 d -= ev.delta;
             }
             d
@@ -214,7 +214,7 @@ pub fn gamepad_connections(
     mut gamepad_evr: EventReader<GamepadEvent>,
     mut settings: ResMut<GamepadSettings>,
 ) {
-    for ev in gamepad_evr.iter() {
+    for ev in gamepad_evr.read() {
         // Only matching again
         if let GamepadEvent::Connection(conn_event) = ev {
             let id = conn_event.gamepad;
