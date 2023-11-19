@@ -20,7 +20,7 @@ pub fn camera_movement_system(
     mut q: Query<&mut DebugCamera>,
     time: Res<Time>,
     keys: Res<Input<KeyCode>>,
-    debug_camera_active: Res<DebugCameraActive>,
+    mut debug_camera_active: ResMut<DebugCameraActive>,
     keyboard_bindings: Res<KeyboardBindings>,
     gamepad_bindings: Res<GamepadBindings>,
     mut motion_evr: EventReader<MouseMotion>,
@@ -32,6 +32,26 @@ pub fn camera_movement_system(
     // Shortcut if neither control scheme is active. This is not strictly needed, but it avoids
     // some computation if controls are inactive.
     if !(debug_camera_active.gamepad || debug_camera_active.keymouse) {
+        return;
+    }
+
+    if debug_camera_active.gamepad {
+        if let Some(gamepad) = active_gamepad.0 {
+            if button_axes.get(GamepadButton::new(gamepad, gamepad_bindings.esc)).is_some() {
+                debug_camera_active.esc_toggled = !debug_camera_active.esc_toggled;
+                return;
+            }
+        }
+    }
+
+    if debug_camera_active.keymouse {
+        if keys.just_released(keyboard_bindings.esc) {
+            debug_camera_active.esc_toggled = !debug_camera_active.esc_toggled;
+            return;
+        }
+    }
+
+    if debug_camera_active.esc_toggled {
         return;
     }
 
@@ -79,7 +99,7 @@ pub fn camera_movement_system(
         let key_roll_right = keys.pressed(keyboard_bindings.roll_right);
         let mouse_delta = {
             let mut d = Vec2::default();
-            for ev in motion_evr.iter() {
+            for ev in motion_evr.read() {
                 d -= ev.delta;
             }
             d
@@ -153,6 +173,10 @@ pub fn camera_update_system(
     mut q: Query<(&mut Transform, &DebugCamera), With<Camera>>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
+    if debug_camera_active.esc_toggled {
+        return;
+    }
+
     if debug_camera_active.gamepad || debug_camera_active.keymouse {
         for (mut transform, controlled_camera) in q.iter_mut() {
             *transform = Transform::from_translation(controlled_camera.position).looking_at(
@@ -169,10 +193,16 @@ pub fn cursor_grab_system(
     mut windows: Query<&mut Window>,
     debug_camera_active: Res<DebugCameraActive>,
 ) {
+
     if debug_camera_active.keymouse {
         if let Some(mut window) = windows.iter_mut().next() {
-            window.cursor.grab_mode = CursorGrabMode::Locked;
-            window.cursor.visible = false;
+            if !debug_camera_active.esc_toggled {
+                window.cursor.grab_mode = CursorGrabMode::Locked;
+                window.cursor.visible = false;
+            } else {
+                window.cursor.grab_mode = CursorGrabMode::None;
+                window.cursor.visible = true;
+            }
         }
     }
 }
@@ -184,7 +214,7 @@ pub fn gamepad_connections(
     mut gamepad_evr: EventReader<GamepadEvent>,
     mut settings: ResMut<GamepadSettings>,
 ) {
-    for ev in gamepad_evr.iter() {
+    for ev in gamepad_evr.read() {
         // Only matching again
         if let GamepadEvent::Connection(conn_event) = ev {
             let id = conn_event.gamepad;
